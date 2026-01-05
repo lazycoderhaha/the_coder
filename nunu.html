@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meow Face</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+        }
+
+        .cat-face {
+            width: 200px;
+            height: 200px;
+            background: #FFD700;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .ear {
+            width: 40px;
+            height: 60px;
+            background: #FFD700;
+            position: absolute;
+            top: -20px;
+            border-radius: 50% 50% 0 0;
+            border: 3px solid #333;
+        }
+
+        .ear.left {
+            left: 30px;
+            transform: rotate(-20deg);
+        }
+
+        .ear.right {
+            right: 30px;
+            transform: rotate(20deg);
+        }
+
+        .ear::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 25px;
+            background: #FFB6C1;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+        }
+
+        .eye {
+            width: 30px;
+            height: 40px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 60px;
+        }
+
+        .eye.left {
+            left: 50px;
+        }
+
+        .eye.right {
+            right: 50px;
+        }
+
+        .pupil {
+            width: 15px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s;
+        }
+
+        .mouth {
+            width: 60px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top: none;
+            border-radius: 0 0 60px 60px;
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .meow-text {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            opacity: 0;
+            animation: meowPop 0.6s ease-out;
+        }
+
+        @keyframes meowPop {
+            0% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-30px);
+            }
+        }
+
+        button {
+            position: absolute;
+            bottom: 20px;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cat-face" id="catFace">
+        <div class="ear left"></div>
+        <div class="ear right"></div>
+        <div class="eye left">
+            <div class="pupil"></div>
+        </div>
+        <div class="eye right">
+            <div class="pupil"></div>
+        </div>
+        <div class="mouth"></div>
+    </div>
+
+    <button onclick="meow()">Meow!</button>
+
+    <script>
+        function meow() {
+            const catFace = document.getElementById('catFace');
+            const meowText = document.createElement('div');
+            meowText.className = 'meow-text';
+            meowText.textContent = 'Meow! 🐱';
+            catFace.appendChild(meowText);
+
+            setTimeout(() => meowText.remove(), 600);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            const pupils = document.querySelectorAll('.pupil');
+            const catFace = document.getElementById('catFace');
+            const rect = catFace.getBoundingClientRect();
+            const catX = rect.left + rect.width / 2;
+            const catY = rect.top + rect.height / 2;
+
+            pupils.forEach(pupil => {
+                const angle = Math.atan2(e.clientY - catY, e.clientX - catX);
+                const x = Math.cos(angle) * 5;
+                const y = Math.sin(angle) * 5;
+                pupil.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+            });
+        });
+    </script>
+</body>
+
+</html>
